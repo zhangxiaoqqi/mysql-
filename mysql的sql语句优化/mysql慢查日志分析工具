@@ -1,0 +1,11 @@
+用mysql官方提供的日志分析工具查看TOP3慢日志
+
+mysqldumpslow -t 3 /home/mysql/data/mysql-slow.log | more
+
+linux系统下如果使用mysqldumpslow出现报错:-bash: mysqldumpslow: command not found的话,建立链接即可:   ln -s /usr/local/mysql/bin/mysqldumpslow /usr/bin
+
+
+mysqldumpslow 在windows中是一个perl文件，所以需要你配置perl环境变量 并使用perl运行mysqldumpslow.pl
+
+
+
