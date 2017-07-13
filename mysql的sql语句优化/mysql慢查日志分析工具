@@ -8,4 +8,11 @@ linux系统下如果使用mysqldumpslow出现报错:-bash: mysqldumpslow: comman
 mysqldumpslow 在windows中是一个perl文件，所以需要你配置perl环境变量 并使用perl运行mysqldumpslow.pl
 
 
-
+*****************
+通过慢查日志发现问题
+1.查询次数多且每次查询占用时间长的SQL
+  通常为pt-query-digest分析的前几个查询
+2.IO大的SQL
+  注意pt-query-digest分析中的Rows examine项
+3.未命中索引的SQL
+  注意pt-query-digest分析中的Rows examine和Row send 的对比
