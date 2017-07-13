@@ -7,4 +7,7 @@ select count(distinct customer_id), count(distinct staff_id) from payment;<br>
 
 离散度，我的理解就是唯一性了，比如主键，绝对是离散度最大的，而一些用来标识状态标识的列，基本只有几个可选项，离散度就很小
 
-
+离散程度的大小的判定方法：
+计算出数据库中记录不重复数量
+select count(distinct row1),count(distinct row2) from table;
+count()值大的就离散度高。
