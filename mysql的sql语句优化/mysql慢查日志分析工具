@@ -41,3 +41,19 @@ extra列需要注意的返回值
 Using filesort:看到这个的时候，查询就需要优化了。MYSQL需要进行额外的步骤来发现如何对返回的行排序。它根据连接类型以及存储排序键值和匹配条件的全部行的行指针来排序全部行
 
 Using temporary:看到这个的时候，查询需要优化了。这里，MYSQL徐哟创建一个临时表来存储接口，这通常发生在对不同的列表进行ORDER BY上，而不是GROUP BY上
+
+************************************
+Max()和Count()的优化
+
+1.对max()查询，可以为表创建索引，create index index_name on table_name(column_name 规定需要索引的列),然后在进行查询
+
+2.count()对多个关键字进行查询，比如在一条SQL中同时查出2006年和2007年电影的数量，语句：
+
+select count(release_year='2006' or null) as '2006年电影数量',
+       count(release_year='2007' or null) as '2007年电影数量'
+from film;
+
+3.count(*) 查询的结果中，包含了该列值为null的结果
+
+
+
