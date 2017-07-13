@@ -68,3 +68,15 @@ explain select actor.first_name,actor.last_name,count(*) from film_actor inner j
 改写为
 explain select actor.first_name,actor.last_name,c.cnt from actor inner join (select actor_id,count(*) AS cnt from film_actor GROUP BY actor_id) AS c USING(actor_id)\G
 
+*************************************************************************************************
+limit常用于分页处理，时常会伴随order by从句使用，因此大多时候会使用Filesorts这样会造成大量的io问题
+1.使用有索引的列或主键进行order by操作
+2.记录上次返回的主键，在下次查询时使用主键过滤
+   使用这种方式有一个限制，就是主键一定要顺序排序和连续的，如果主键出现空缺可能会导致最终页面上显示的列表不足5条，
+   解决办法是附加一列，保证这一列是自增的并增加索引就可以了
+   
+   
+   
+   
+   
+   
