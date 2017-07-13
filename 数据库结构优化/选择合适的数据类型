@@ -1,0 +1,18 @@
+选择合适的数据类型
+1.使用可存下数据的最小的数据类型
+2.使用简单地数据类型，Int要比varchar类型在mysql处理上更简单
+3.尽可能使用not null定义字段，这是由innodb的特性决定的，
+    因为非not null的数据可能需要一些额外的字段进行存储，这样就会增加一些IO。
+    可以对非null的字段设置一个默认值
+4.尽量少用text，非用不可最好分表，
+  将text字段存放到另一张表中，在需要的时候再使用联合查询，这样可提高查询主表的效率
+例子1、用Int存储日期时间
+from_unixtime()可将Int类型的时间戳转换为时间格式
+select from_unixtime(1392178320); 输出为 2014-02-12 12:12:00
+unix_timestamp()可将时间格式转换为Int类型
+select unix_timestamp('2014-02-12 12:12:00'); 输出为1392178320
+例子2
+存储IP地址——bigInt
+利用inet_aton(),inet_ntoa()转换
+select inet_aton('192.169.1.1'); 输出为3232301313
+select inet_ntoa(3232301313); 输出为192.169.1.1
