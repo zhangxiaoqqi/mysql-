@@ -59,3 +59,12 @@ from film;
 子查询一般优化成join的查询方式，同时需考虑关联键是否存在一对多的关系
 如果存在一对多的关系，则可以使用distinct关键字去重.
 
+
+***************************************************************************************
+如果涉及到表联接的过程中有group by这样的语句,可以先通过group by做为子查询，统计出结果后，再与其它表进行关联查询。
+
+这个例子中，可以把
+explain select actor.first_name,actor.last_name,count(*) from film_actor inner join actor on actor.actor_id = film_actor.actor_id group by actor.actor_id\G
+改写为
+explain select actor.first_name,actor.last_name,c.cnt from actor inner join (select actor_id,count(*) AS cnt from film_actor GROUP BY actor_id) AS c USING(actor_id)\G
+
