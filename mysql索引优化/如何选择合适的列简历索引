@@ -1,0 +1,10 @@
+选择合适的索引列<br>
+1.在where，group by，order by，on从句中出现的列<br>
+2.索引字段越小越好(因为数据库的存储单位是页，一页中能存下的数据越多越好 )<br>
+3.离散度大得列放在联合索引前面<br>
+select count(distinct customer_id), count(distinct staff_id) from payment;<br>
+查看离散度 通过统计不同的列值来实现 count越大 离散程度越高
+
+离散度，我的理解就是唯一性了，比如主键，绝对是离散度最大的，而一些用来标识状态标识的列，基本只有几个可选项，离散度就很小
+
+
