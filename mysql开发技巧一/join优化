@@ -1,0 +1,16 @@
+DDL：数据定义语言 --- CREATE、ALTER、DROP、TRUNCATE
+TPL：事务处理语言 --- COMMIT、ROLLBACK、SAVEPOINT、SET TRANSACTION
+DCL：数据控制语言 --- GRANT、REVOKE
+DML：数据操作语言 --- SELECT、UPDATE、INSERT、DELETE
+
+join从句：： inner | full outer | left outer | right outer | cross
+内连接inner join: select a.user_name,a.over,b.over from user1 a join user2 b on a.user_name=b.user_name;
+
+
+
+
+
+
+
+
+
