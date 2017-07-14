@@ -8,9 +8,13 @@ join从句：： inner | full outer | left outer | right outer | cross
 
 
 
+********************************************************************************
+left join 以左表为基础 查询
+忽然想起来有次面试问我如何用left join实现not in的功能 = =
 
+select A.内容,B.内容 from A left join B ON a.key=b.key where b.key is null
 
-
+not in 关键字不会使用索引 所以用left join加上关键字为null查找只存在于A表不存在于B表的数据
 
 
 
