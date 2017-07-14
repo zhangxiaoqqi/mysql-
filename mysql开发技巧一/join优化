@@ -9,12 +9,43 @@ join从句：： inner | full outer | left outer | right outer | cross
 
 
 ********************************************************************************
+左外连接
+
 left join 以左表为基础 查询
 忽然想起来有次面试问我如何用left join实现not in的功能 = =
 
 select A.内容,B.内容 from A left join B ON a.key=b.key where b.key is null
 
 not in 关键字不会使用索引 所以用left join加上关键字为null查找只存在于A表不存在于B表的数据
+
+
+EFT OUTER JOIN：包含左表中的所有数据，当某个连接谓词不在右表中时，新生成的表的右表字段为NULL。
+                对左表数据的信息进行扩展，增加右表中的字段，当某个连接谓词不在右表中时，新生成的表的右表字段为NULL。
+
+使用LEFT OUTER JOIN对NOT IN 进行优化。
+SELECT select_sxpressions FROM TABLE A LEFT  JOIN TABLE B ON A.key=B.key WHERE B.key IS NULL;
+表A中不包含表B中的数据。
+SELECT select_sxpressions FROM TABLE A LEFT JOIN TABLE B ON A.key=B.key WHERE B.key IS NOT NULL;
+表A与表B的交集，相当于INNER JOIN。
+
+********************************************************************************
+右外连接
+
+RIGHT OUTER JOIN：包含右表中的所有数据，当某个连接谓词不在左表中时，新生成的表的左表字段为NULL。
+对右表数据的信息进行扩展，增加左表中的字段，当某个连接谓词不在左表中时，新生成的表的左表字段为NULL。
+
+使用RIGHT OUTER JOIN对NOT IN 进行优化。
+SELECT select_sxpressions FROM TABLE A RIGHT  JOIN TABLE B ON A.key=B.key WHERE A.key IS NULL;
+表B中不包含表A中的数据。
+SELECT select_sxpressions FROM TABLE A RIGHT  JOIN TABLE B ON A.key=B.key WHERE A.key IS NOT NULL;
+表A与表B的交集，相当于INNER JOIN。
+
+
+
+
+
+
+
 
 
 
