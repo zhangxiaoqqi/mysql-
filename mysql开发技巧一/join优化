@@ -86,7 +86,12 @@ select a.user_name , a.over , b.over from user1 a left join user2 b on a.user_na
 
 
 
-
+********************************************************************************
+使用join + having优化聚合子查询:
+select a.user_name,b.timestr,b.kills from user1 a join user_kills b on a.id = b.user_id
+    join user_kills c on c.user_id = b.user_id
+    group by a.user_name,btimestr,b.kills
+    having b.kills = max(c.kills);
 
 
 
