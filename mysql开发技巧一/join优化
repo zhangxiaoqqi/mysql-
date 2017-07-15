@@ -40,6 +40,37 @@ SELECT select_sxpressions FROM TABLE A RIGHT  JOIN TABLE B ON A.key=B.key WHERE 
 SELECT select_sxpressions FROM TABLE A RIGHT  JOIN TABLE B ON A.key=B.key WHERE A.key IS NOT NULL;
 表A与表B的交集，相当于INNER JOIN。
 
+********************************************************************************
+全连接
+
+FULL JOIN：是LEFT OUTER JOIN和RIGHT OUTER JOIN的合集。显示出两张表中的所有数据，
+            当一张表的连接谓词无法满足时，则另一张表的字段在该表中为NULL。
+
+MySQL不支持FULL JOIN
+解决方法：
+通过UNION将左连接和右连接的结果合并
+SELECT select_expressions
+FROM TABLE A LEFT JOIN TABLE B ON A.key=B.key
+UNION ALL
+SELECT select_expressions
+FROM TABLE A RIGHT JOIN TABLE B ON A.key=B.key;
+
+UNION会自动删除重复项，刷选出部分字段的时候要注意了，如果刷选出来的两个字段的值完全相同就会剩下一个。
+UNION ALL 和 UNION 不同之处在于 UNION ALL 会将左右两个查询的结果的所有的资料都列出来，无论资料值有无重复。
+
+********************************************************************************
+
+CROSS JOIN：笛卡尔连接，如果A和B是两个集合，它们的交叉连接就记为A X B。
+            一个表的每个记录与另一个表的所有记录进行连接，形成A.length*B.length个数据项的表。（无需提供ON）
+
+SELECT select_expressions  FROM TABLE A CROSS JOIN TABLE B;
+
+
+
+
+
+
+
 
 
 
