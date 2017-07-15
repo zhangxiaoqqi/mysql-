@@ -8,6 +8,9 @@ SQL开发技巧（二）
 需要进行行转列的场景：报表统计、汇总显示
 
 ********************************************************************************
+ 行转列的关键是union ,列转行的关键是join
+
+********************************************************************************
 行转列：
 1.利用自身连接来实现：
 SELECT *
@@ -102,15 +105,26 @@ select user_name,'clothing' as equipment, clothing from user1 a join user1_equip
 union all
 select user_name,'shoe' as equipment, shoe from user1 a join user1_equipment b on a.id=user_id
 
+********************************************************************************
+使用序列化表进行行列转换。
 
-
-
-
-
-
-
-
-
-
-
-
+1.首先我们先建立一个序列表<br>
+2.思路：<br>
+首先我们通过cross join 将user1_equipment 和 序列表 进行笛卡尔积，变成最终有多少条记录 c.id 必须小于等于user1_equipment的列数<br>
+再通过case语句，分别取c.id=1,2,3...的对应的行的值，加上coalesce取不为空的数据<br>
+ent 和 序列表 进行笛卡尔积，变成最终有多少条记录 c.id 必须小于等于user1_equipment的列数<br>
+最后加上对应的列名，<br>行的值，加上coalesce取不为空的数据<br>
+示例如下：<br>
+SELECT user_name,<br>
+CASE WHEN c.id = 1 THEN 'arms'<br>
+WHEN c.id = 2 THEN 'clothing'<br><br>
+WHEN c.id = 3 THEN 'shoe'<br>br>
+END AS equipment,<br>//生成装备列
+COALESCE(<br>
+CASE WHEN c.id = 1 THEN arms END<br>
+CASE WHEN c.id = 2 THEN clothing END<br>
+CASE WHEN c.id = 3 WHEN shoe END <br>
+) AS eq_name<br>//coalesce取不为空的数据，那条不为空取那一条
+FROM user1 a<br>
+JOIN user1_equipment b ON a.id=b.user_id<br>
+CROSS JOIN tb_sequence c WHERE c.id <= 3 ORDER BY user_name;
