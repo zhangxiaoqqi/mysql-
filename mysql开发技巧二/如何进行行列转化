@@ -1,0 +1,34 @@
+SQL开发技巧（二）
+内容介绍：
+1.如何进行行列转换
+2.如何生成唯一序列号
+3.如何删除重复数据
+
+********************************************************************************
+需要进行行转列的场景：报表统计、汇总显示
+
+********************************************************************************
+行转列：
+利用自身连接来实现：
+SELECT *
+FROM (
+SELECT SUM(KILLS) AS 'A'
+FROM A INNER JOIN B ON A.NAME=B.USER_NAME
+WHERE A.NAME='A') AS A CROSS JOIN(
+SELECT SUM(KILLS) AS 'B'
+FROM A INNER JOIN B ON A.NAME=B.USER_NAME
+WHERE A.NAME='B') AS B CROSS JOIN(
+SELECT SUM(KILLS) AS 'C'
+FROM A INNER JOIN B ON A.NAME=B.USER_NAME
+WHERE A.NAME='C')AS C;
+
+比如成绩
+1、分别查询出不同同学的成绩，并将字段名改为同学的名字
+2、通过交叉连接，将不同的语句连接起来
+
+缺点：是将原来查询的结果每一行单独查询出来，再进行拼接。
+    因此每增加一个同学就增加一个SELECT语句。并且是通过交叉连接，要保证每个查询的结果只能是一个，不然没办法通过交叉连接实现转换。
+
+
+
+
