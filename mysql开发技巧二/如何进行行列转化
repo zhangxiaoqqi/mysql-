@@ -9,7 +9,7 @@ SQL开发技巧（二）
 
 ********************************************************************************
 行转列：
-利用自身连接来实现：
+1.利用自身连接来实现：
 SELECT *
 FROM (
 SELECT SUM(KILLS) AS 'A'
@@ -23,11 +23,93 @@ FROM A INNER JOIN B ON A.NAME=B.USER_NAME
 WHERE A.NAME='C')AS C;
 
 比如成绩
-1、分别查询出不同同学的成绩，并将字段名改为同学的名字
-2、通过交叉连接，将不同的语句连接起来
+    1、分别查询出不同同学的成绩，并将字段名改为同学的名字
+    2、通过交叉连接，将不同的语句连接起来
 
-缺点：是将原来查询的结果每一行单独查询出来，再进行拼接。
-    因此每增加一个同学就增加一个SELECT语句。并且是通过交叉连接，要保证每个查询的结果只能是一个，不然没办法通过交叉连接实现转换。
+    缺点：是将原来查询的结果每一行单独查询出来，再进行拼接。
+        因此每增加一个同学就增加一个SELECT语句。并且是通过交叉连接，要保证每个查询的结果只能是一个，不然没办法通过交叉连接实现转换。
+
+********************************************************************************
+
+2.使用case语句进行行列转换<br>
+select sum(case when user_name='孙悟空' then kills end) as '孙悟空',<br>
+sum(case when user_name='猪八戒' then kills end) as '猪八戒',<br>
+sum(case when user_name='沙僧' then kills end) as '沙僧'<br>
+from user1 a join user_kills b on a.id=b.user_id;
+-----------------------------------------------
+使用CASE语句：
+SELECT SUM(CASE USER_NAME='A' THEN KILLS END) AS 'A',
+SUM(CASE USERNAME='B' THEN KILL END) AS 'B',
+SUM(CASE USERNAME='C' THEN KILL END) AS 'C'
+FROM A INNER JOIN B ON A.NAME=B.USERNAME;
+
+通过CASE给满足WHEN语句的数据返回SUM聚合函数要统计的数据，再将SUM进行重命名。推荐。
+一般形式
+SELECT NAME AS '姓名',
+SUM(CASE SUBJECT WHEN '数学' THEN MARK ELSE NULL END) AS '数学',
+SUM(CASE SUBJECT WHEN '英语' THEN MARK ELSE NULL END) AS '英语',
+SUM(CASE SUBJECT WHEN '语文' THEN MARK ELSE NULL END) AS '语文'
+FROM SUBJECT
+GROUP BY NAME;
+
+CASE语句中放原来表中要进行转换的字段（如学科），对其进行分类（如数学、英语、语文）。
+注意：要用聚合函数，最后要GROUP BY。
+
+
+********************************************************************************
+列转行：
+单列转多行：属性拆分，ETL数据处理
+
+********************************************************************************
+利用序列表处理列转行的数据
+  a.select a.user_name, concat(a.mobile,',') mobile,
+    length(mobile)-length(replace(a.mobile,',',''))+1 size from user1 a
+    每一列后面添加‘，’ 并根据‘，’统计出包含的数量
+  b.和tb_sequence进行cross join 实现size多大就生成几条的记录
+
+  c.进行字符串的截取
+
+
+分享一个序列表的存储过程
+  DROP PROCEDURE IF EXISTS usp_getseqtable;
+  CREATE PROCEDURE usp_getseqtable(
+    IN id        INT
+  )
+    BEGIN
+      DECLARE i INT;
+      DROP TABLE IF EXISTS im_sequence;
+      CREATE TABLE  im_sequence (
+             id INT AUTO_INCREMENT PRIMARY KEY
+            )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+      SET i=1;
+      WHILE i <= id DO
+        #插入表数据
+          INSERT INTO im_sequence VALUES (NULL);
+        SET i = i + 1;
+      END WHILE;
+    END;
+
+  CALL usp_getseqtable(20)
+
+********************************************************************************
+
+列转行的场景之二
+
+使用union all连接转换：
+select user_name,'arms' as equipment, arms from user1 a join user1_equipment b on a.id=user_id
+union all
+select user_name,'clothing' as equipment, clothing from user1 a join user1_equipment b on a.id=user_id
+union all
+select user_name,'shoe' as equipment, shoe from user1 a join user1_equipment b on a.id=user_id
+
+
+
+
+
+
+
+
+
 
 
 
