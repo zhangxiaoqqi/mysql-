@@ -95,8 +95,22 @@ select a.user_name,b.timestr,b.kills from user1 a join user_kills b on a.id = b.
 
 
 
-
-
+********************************************************************************
+分类聚合，在查询多种分类数据时使用到一种聚合方式
+刚仔细思考了一下最后一课的SQL，与大家分享一下，希望大家帮忙找出错误。
+    select d.user_name ,c.ctimestr,kills from
+    (select user_id ,timestr ,kills ,(
+     select count(*) from user_kills b where b.user_id = a.user_id and a.kills <= b.kills) as cnt
+     from user_kills a group by user_id,timestr,kills) c
+     join user1 d on c.user_id = d.id where cnt <= 2
+首先将第一个From后面的子查询看成一个普通表，这样就是一个普通的多表连接查询了。
+where cnt < 2便是筛选条件，选择出顺序是1，2前两条记录。
+然后在看括号里面里层括号这里所做的就是查询出这条记录在分组中根据kills排序的顺序，但是为啥是count（*）呢？
+假设孙悟空打怪 3，5，12 我用3，5,12分别与3，5,12比较
+3   3,5,12  小于3的有3条记录
+5  3,5,12   小于5的有2条记录
+12 3,5，12  小于12的有1条记录
+如此count（*）代表的就是顺序了，如果需要正序，只要将<= 改成>=就好了
 
 
 
