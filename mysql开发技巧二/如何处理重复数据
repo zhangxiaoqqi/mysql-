@@ -1,0 +1,33 @@
+***********************************************************************************************
+1.判断数据是否重复：
+SELECT user_name , over, count(*) FROM user1_test GROUP BY user_name, over HAVING count(*)>1
+
+2.删除重复数据，对于相同数据保留ID最大的
+DELETE *
+FROM user1_test a JOIN(
+SELECT user_name,COUNT(*),MAX(id) AS id
+FROM user1_test
+GROUP BY user_name HAVING COUNT(*) > 1
+) b ON a.user_name = b.user_name
+WHERE a.id < b.id
+
+3.将表中查询的数据再次插入到表中
+INSERT INTO xmss_wh(XM_ID,WH_ID,YJ,SH,SHR,FJ_NAME,FJ_ID)
+SELECT XM_ID,WH_ID,YJ,SH,SHR,FJ_NAME,FJ_ID FROM xmss_wh WHERE ID=28;
+
+sql中的group by 用法解析：
+Group By语句从英文的字面意义上理解就是“根据(by)一定的规则进行分组(Group)”。
+它的作用是通过一定的规则将一个数据集划分成若干个小的区域，然后针对若干个小区域进行数据处理。
+--注意:group by 是先排序后分组；
+--举例子说明：如果要用到group by 一般用到的就是“每这个字” 例如说明现在有一个这样的表：每个部门有多少人 就要用到分组的技术
+select DepartmentID as '部门名称',
+COUNT(*) as '个数' from BasicDepartment group by DepartmentID
+
+这个就是使用了group by +字段进行了分组，其中我们就可以理解为我们按照了部门的名称ID
+DepartmentID将数据集进行了分组；然后再进行各个组的统计数据分别有多少；
+如果不用count(*)等类似函数
+select DepartmentID,DepartmentName from BasicDepartment group by DepartmentID
+将会报错
+
+
+***********************************************************************************************
