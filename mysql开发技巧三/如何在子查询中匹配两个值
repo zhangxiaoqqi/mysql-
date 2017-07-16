@@ -1,0 +1,18 @@
+**************************************************************************************************
+将子查询改为join写法时要注意表中关系是不是一对多或多对多，这种情况下要对查询结果使用distinct去重。
+
+**************************************************************************************************
+select a.user_name,b.timestr,kills from user1 a join user_kills b on
+  a.id=b.user_id join(select user_id,max(kills) as cnt from user_kills group by user_id)c on
+  b.user_id=c.user_id and b.kills=c.cnt;
+
+mysql中独有的列过滤方式：多列过滤
+select a.user_name,b.timestr,kills
+from user1 a
+join user_kills b on a.id=b.user_id
+where (b.user_id,b.kills) in (
+    select user_id,max(kills)
+    from user_kills
+    group by user_id
+)；
+
