@@ -31,3 +31,7 @@ select DepartmentID,DepartmentName from BasicDepartment group by DepartmentID
 
 
 ***********************************************************************************************
+更复杂的重复删除：属性中有相同的字段
+1、想将属性通过单列转多行得到新的表
+2、再删除重复数据
+3、再利用GROUP BY CONCAT回复成原表
