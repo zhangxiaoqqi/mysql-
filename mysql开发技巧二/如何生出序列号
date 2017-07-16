@@ -1,0 +1,24 @@
+存储过程，订单号：
+DECLARE v_cnt INT;
+DECLARE v_timestr INT;
+DECLARE rowcount BIGINT;
+SET v_timestr = DATE_FORMAT(NOW(),'%Y%m%d');
+SELECT ROUND(RAND()*100,0)+1 INTO v_cnt;
+START TRANSACTION;
+UPDATE order_seq SET order_sn = order_sn + v_cnt WHERE timestr = v_timestr;
+IF ROW_COUNT() = 0 THEN
+INSERT INTO order_seq(timestr,order_sn) VALUES(v_timestr,v_cnt);
+END IF;
+SELECT CONCAT(v_timestr,LPAD(order_sn,7,0))AS order_sn
+FROM order_seq WHERE timestr = v_timestr;
+COMMIT;
+
+知识点：
+1、在sql语句中添加变量。
+    declare @local_variable data_type
+    声明时需要指定变量的类型，可以使用SET、SELECT、SELECT...INTO对变量进行赋值，
+    在sql语句中就可以使用@local_variable来调用变量。
+2、RAND()返回一个介于 0 到 1（不包括 0 和 1）之间的伪随机 float 值。
+3、事务
+4、ROW_COUNT()函数返回查询语句执行后，被影响的列数目
+5、IF...THEN...END IF;
