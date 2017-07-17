@@ -1,0 +1,10 @@
+计算累进税类问题
+使用least（）实现计算不同区间个人所得税：
+select user_name,sum(curmoney*rate)as taxmoney
+from(
+select user_name,money,low,high,
+least(money-low,high-low) as curmoney,rate
+from user1 a join taxrate b
+on a.money>b.low
+) a
+group by user_name
