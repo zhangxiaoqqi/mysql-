@@ -29,3 +29,11 @@ Where (case when b.skill is not null then 1 else 0 end)
 +(case when d.skill is not null then 1 else 0 end)
 +(case when e.skill is not null then 1 else 0 end)>=2;
 
+********************************************************************************
+Group by  分组 查询多属性
+
+select a.user_name
+from user1 a
+join user1_skills b on a.id=b.user_id
+where b.skill in('念经','变化','腾云','浮水') and b.skill_level>0
+group by a.user_name having count(*)>=2
