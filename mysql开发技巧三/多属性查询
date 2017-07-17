@@ -1,0 +1,23 @@
+
+查询同一字段的不同值，两表关联时要第一张表要join多次第二张表（不同的值有几种就关联几次）
+
+select s1.username,s1.skill,s2.skill from skills s1 join
+skills s2 on s1.username=s2.username where s1.skill='变化' and s2.skill='念经' and
+s1.skill_level>0 and s2.skill_level>0;
+
+
+********************************************************************************
+解决同属性多值过滤的问题
+select a.user_name,b.skill,c.skill,d.skill
+from user1 a
+join user_skill b on a.id=b.user_id and b.skill='念经'
+join user_skill c on c.user_id= b.user_id and c.skill='变化'
+join user_skill d on d.user_id = c.user_id and d.skill='腾云'
+where b.skill_level>0 and c.skill_level>0 and d.skill_level>0;
+
+使用一张物理表变成多个逻辑表多次连接的方式解决同一个属性多个值的过滤问题
+
+
+
+
+
