@@ -17,7 +17,15 @@ where b.skill_level>0 and c.skill_level>0 and d.skill_level>0;
 
 使用一张物理表变成多个逻辑表多次连接的方式解决同一个属性多个值的过滤问题
 
-
-
-
+********************************************************************************
+过滤条件有多个，当任意两个满足就ok的SQL查询语句的思路，使用求和的方式来实现。
+select a.user_name,b.skill,c.skill,d.skill
+from user1 a
+join user_skill b on a.id=b.user_id and b.skill='念经'
+join user_skill c on c.user_id= b.user_id and c.skill='变化'
+join user_skill d on d.user_id = c.user_id and d.skill='腾云'
+Where (case when b.skill is not null then 1 else 0 end)
++(case when c.skill is not null then 1 else 0 end)
++(case when d.skill is not null then 1 else 0 end)
++(case when e.skill is not null then 1 else 0 end)>=2;
 
